@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.5.21"
     java
+    `maven-publish`
 }
 
 group = "com.rsps.studios"
@@ -19,4 +20,22 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://legionkt.com:8085/repository/maven-snapshots/")
+            credentials {
+                username = project.properties["myNexusUsername"] as String
+                password = project.properties["myNexusPassword"] as String
+            }
+        }
+    }
 }
